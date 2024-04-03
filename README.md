@@ -1,6 +1,6 @@
 # Sitechecker
 
-This script checks the status codes of subdomains listed in a text file.
+This script checks the status codes of sites or subdomains listed in a file.
 
 
 ## Installation
