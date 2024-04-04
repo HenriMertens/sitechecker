@@ -3,11 +3,11 @@ import argparse
 import requests
 import concurrent.futures
 
-def check_subdomain(subdomain, only_200):
+def check_subdomain(subdomain, only_200, timeout):
     url = f"http://{subdomain.strip()}"
 
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=timeout)
         if only_200:
             if response.status_code == 200:
                 return f"{subdomain.strip()} : {response.status_code}"
@@ -32,7 +32,7 @@ def check_subdomain(subdomain, only_200):
             return f"{subdomain.strip()} : {str(e)}"
 
 
-def check_subdomains(file_path, num_threads=50, only_200=False):
+def check_subdomains(file_path, num_threads=50, only_200=False, timeout=10):
     try:
         with open(file_path, 'r') as file:
             subdomains = file.readlines()
@@ -41,7 +41,7 @@ def check_subdomains(file_path, num_threads=50, only_200=False):
         return
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-        results = executor.map(lambda subdomain: check_subdomain(subdomain, only_200), subdomains)
+        results = executor.map(lambda subdomain: check_subdomain(subdomain, only_200, timeout), subdomains)
 
     # Filter out None values
     results = [result for result in results if result is not None]
@@ -54,6 +54,7 @@ if __name__ == "__main__":
     parser.add_argument("-F", "--file", help="Path to the text file containing subdomains", required=True)
     parser.add_argument("-T", "--threads", type=int, default=50, help="Number of threads (default: 50)")
     parser.add_argument("-O", "--only_200", action="store_true", help="Only output subdomains with status code 200")
+    parser.add_argument("-TO", "--timeout", type=int, default=10, help="Timeout value for requests in seconds (default: 10)")
 
     args = parser.parse_args()
-    check_subdomains(args.file, args.threads, args.only_200)
+    check_subdomains(args.file, args.threads, args.only_200, args.timeout)
