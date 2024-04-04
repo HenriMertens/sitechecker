@@ -32,6 +32,8 @@ Filename, if file is in the same directory else file path
 Number of threads running (default = 50)
 ### -O
 Only list sites that return status code 200
+### -TO
+Set timeout value
 
 
 
