@@ -1,6 +1,7 @@
 # Sitechecker
 
 This script checks the status codes of sites or subdomains listed in a file.
+Tested for kali linux, python3
 
 
 ## Installation
